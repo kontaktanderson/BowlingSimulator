@@ -144,6 +144,11 @@
   @endif
   <h4>This can be changed in the controller.</h4>
   Validated from SKAT Bowling API: {{ $scores['validated'] }} <br />(API validation only trustworthy then using time ended mode)
+  @if ($scores['validated'] == "true")
+	<script>
+	location.reload();
+	</script>
+  @endif
             </div>
         </div>
     </body>
