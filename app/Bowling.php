@@ -13,13 +13,13 @@ class Bowling extends Model
     If set false, the game calculates like the game time has ended - calculating last strikes and spares as 10 without bonus point.
     */
     private $LivePlay;
-    
+
     /*
     Variable: Frames
     All the frames from the game is loaded into this variable
     */
     private $Frames;
-    
+
     /*
     Function: Construct
     If LivePlay is set true, the game calculates like the game is currently in play - meaning it doesn't calculate spares and strikes until their bonus point is available.
@@ -29,22 +29,22 @@ class Bowling extends Model
     {
         $this->LivePlay = $LivePlay;
     }
-    
+
     /*
     Function: SanitizeInteger
     Returns true if given value is an integer and within minimum and maximum values
     */
-    
+
     public function SanitizeInteger($value, $min, $max)
     {
         return filter_var($value, FILTER_VALIDATE_INT) === false ? false : $value >= $min && $value <= $max ? true : false;
     }
-    
+
     /*
     Function: isStrike
     Returns true if first throw in frame is equal to 10.
     */
-    
+
     public function isStrike($frame)
     {
         if ($this->Frames[$frame][0] == 10) {
@@ -53,12 +53,12 @@ class Bowling extends Model
             return false;
         }
     }
-    
+
     /*
     Function: isBonusStrike
     Returns true if first and second throw in frame is equal to 10.
     */
-    
+
     public function isBonusStrike($frame)
     {
         if ($this->Frames[$frame][0] == 10 && $this->Frames[$frame][1] == 10) {
@@ -67,12 +67,12 @@ class Bowling extends Model
             return false;
         }
     }
-    
+
     /*
     Function: isSpare
     Returns true if first and second throw in frame is equal 10 and isn't a strike.
     */
-    
+
     public function isSpare($frame)
     {
         if (($this->Frames[$frame][0] + $this->Frames[$frame][1]) == 10 && $this->Frames[$frame][0] != 10) {
@@ -81,8 +81,8 @@ class Bowling extends Model
             return false;
         }
     }
-    
-    
+
+
     /*
     Function: nextTwoPoints
     Returns the summation value of the frames first and second throw in frame.
@@ -95,7 +95,7 @@ class Bowling extends Model
             return $this->Frames[$frame][0];
         }
     }
-    
+
     /*
     Function: nextPoint
     Returns specified value of certain frame.
@@ -108,7 +108,7 @@ class Bowling extends Model
             return false;
         }
     }
-    
+
 	/*
     Function: checkPoint
     Check if value is set
@@ -121,7 +121,7 @@ class Bowling extends Model
             return false;
         }
     }
-    
+
 	/*
     Function: setFrame
     Set private value Frames to received data
@@ -130,7 +130,7 @@ class Bowling extends Model
     {
         $this->Frames = $data;
     }
-    
+
     /*
     Function: getFromAPI
     Returns decoded JSON data from SKAT Bowling API
@@ -139,24 +139,24 @@ class Bowling extends Model
     {
         $json = file_get_contents('http://37.139.2.74/api/points');
         $jsondata = json_decode($json);
-        
+
         return $jsondata;
     }
-    
+
     /*
     Function: getPoints
     Calculate the point score for each frame and total score.
     Function contains checks for faulty input.
     Returns an array with the score data and token for validation.
     */
-    
+
     public function getPoints($data)
     {
         if (!is_object($data)) {
             throw new \Exception('Input is not an object');
             return;
         }
-        
+
         if (!property_exists($data, 'token') || empty($data->token)) {
             throw new \Exception('Token is empty or nonexisting');
             return;
@@ -164,11 +164,11 @@ class Bowling extends Model
             throw new \Exception('Points is empty or nonexisting');
             return;
         }
-        
+
         $token  = $data->token;
         $frames = $data->points;
         $this->setFrame($data->points);
-        
+
         $framearray = array();
         $framecount = 1;
         $rowcount   = 0;
@@ -178,8 +178,8 @@ class Bowling extends Model
             if ($this->SanitizeInteger($this->nextPoint($rowcount, 0), 0, 10) && $this->SanitizeInteger($this->nextPoint($rowcount, 1), 0, 10)) {
                 if ($framecount <= 10) {
                     $framearray[$framecount][0] = $this->nextPoint($rowcount, 0) == 10 ? "X" : $this->nextPoint($rowcount, 0);
-                    $framearray[$framecount][1] = $this->nextPoint($rowcount, 0) + $this->nextPoint($rowcount, 1) != 10 ? $this->nextPoint($rowcount, 1) : "/";
                     $framearray[$framecount][1] = $this->nextPoint($rowcount, 0) != 10 ? $this->nextPoint($rowcount, 1) : "";
+                    $framearray[$framecount][1] = $this->nextTwoPoints($rowcount) != 10 ? $this->nextPoint($rowcount, 1) : "/";
                     if ($this->isBonusStrike($rowcount) && $rowcount == 9) {
                         $subscore += 20;
                     } else if ($this->isStrike($rowcount)) {
@@ -232,7 +232,7 @@ class Bowling extends Model
                 return;
             }
         }
-        
+
         foreach ($framearray as $frame) {
             $points[] = $frame['score'];
         }
@@ -242,7 +242,7 @@ class Bowling extends Model
         $framearray['mode']   = $this->LivePlay;
         return $framearray;
     }
-    
+
     /*
     Function: validatePoints
     Checks if the calculated data is correct up against SKAT Bowling API
@@ -255,10 +255,10 @@ class Bowling extends Model
             'token' => $framearray['token'],
             'points' => $framearray['points']
         );
-        
+
         $json    = json_encode($json_data, true);
         $req_url = "http://37.139.2.74/api/points";
-        
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $req_url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, count($json));
@@ -270,11 +270,11 @@ class Bowling extends Model
         curl_close($curl);
         $result                  = json_decode($result);
         $framearray['validated'] = $result->success == 1 ? "true" : "false";
-        
+
         if ($result->success != 1) {
             Log::notice("Calculation doesn't match API? Is that right? - " . json_encode($framearray)); // We only notice, because the verify API is not designed to Live Play mode.
         }
-        
+
         return $framearray;
     }
 }
