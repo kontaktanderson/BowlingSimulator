@@ -178,8 +178,8 @@ class Bowling extends Model
             if ($this->SanitizeInteger($this->nextPoint($rowcount, 0), 0, 10) && $this->SanitizeInteger($this->nextPoint($rowcount, 1), 0, 10)) {
                 if ($framecount <= 10) {
                     $framearray[$framecount][0] = $this->nextPoint($rowcount, 0) == 10 ? "X" : $this->nextPoint($rowcount, 0);
-                    $framearray[$framecount][1] = $this->nextPoint($rowcount, 0) != 10 ? $this->nextPoint($rowcount, 1) : "";
-                    $framearray[$framecount][1] = $this->nextTwoPoints($rowcount) != 10 ? $this->nextPoint($rowcount, 1) : "/";
+                    $framearray[$framecount][1] = $this->isSpare($rowcount) ? "/" : $this->nextPoint($rowcount, 1);
+                    $framearray[$framecount][1] = $this->nextPoint($rowcount, 0) != 10 ? $framearray[$framecount][1] : "";
                     if ($this->isBonusStrike($rowcount) && $rowcount == 9) {
                         $subscore += 20;
                     } else if ($this->isStrike($rowcount)) {
