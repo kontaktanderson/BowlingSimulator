@@ -19,14 +19,15 @@ class BowlingController extends Controller
 	*/
     public function index()
     {
-      $bowling = new Bowling(true);
+      $bowling = new Bowling(false);
 	  $jsondata = $bowling->getFromAPI();
 	  try{
 		$points = $bowling->getPoints($jsondata);
 	  } catch (\Exception $e) {
 		Log::alert($e->getMessage());
 	  }
-	  $score = $bowling->validatePoints($points);
-      return view('bowling', array('scores' => $score));
+	  //$points['validated'] = true;
+	  $points = $bowling->validatePoints($points);
+      return view('bowling', array('scores' => $points));
     }
 }
