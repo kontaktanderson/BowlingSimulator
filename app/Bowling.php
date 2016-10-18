@@ -212,7 +212,6 @@ class Bowling extends Model
                     $rowcount++;
                     $framecount++;
                 } else {
-                    print_r($frames[$rowcount]);
                     if ($this->isBonusStrike($rowcount)) {
                         $framearray[10][1] = $this->nextPoint($rowcount, 0) == 10 ? "X" : $this->nextPoint($rowcount, 0);
                         $framearray[10][2] = $this->nextPoint($rowcount, 1) == 10 ? "X" : $this->nextPoint($rowcount, 1);
