@@ -6,6 +6,9 @@ It calculated the score recieved from an API and can calculate in "time ended mo
 In Live Play mode, the game calculates like the game is currently in play - meaning it doesn't calculate spares and strikes until their bonus point is available.
 In Time ended mode, the game calculates like the game time has ended - calculating last strikes and spares as 10 without bonus point.
 
+The application is default to Live Play mode - and the provided SKAT Bowling validation API runs in Time eneded mode. To see it fully working, you need to change mode to "Time ended mode".
+Instructions are in "Usage"
+
 Custom files
 -----------
 0. app/Bowling.php (Model - Calculation functions)
