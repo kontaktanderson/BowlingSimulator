@@ -138,7 +138,6 @@ class Bowling extends Model
     public function getFromAPI()
     {
         $json = file_get_contents('http://37.139.2.74/api/points');
-        echo $json;
         $jsondata = json_decode($json);
         
         return $jsondata;
@@ -170,14 +169,12 @@ class Bowling extends Model
         $frames = $data->points;
         $this->setFrame($data->points);
         
-        $score      = 0;
         $framearray = array();
         $framecount = 1;
         $rowcount   = 0;
         $totalscore = 0;
-        $total      = 0;
         for ($i = 0; $i < count($this->Frames); $i++) {
-            $subscore = $total;
+            $subscore = $totalscore;
             if ($this->SanitizeInteger($this->nextPoint($rowcount, 0), 0, 10) && $this->SanitizeInteger($this->nextPoint($rowcount, 1), 0, 10)) {
                 if ($framecount <= 10) {
                     $framearray[$framecount][0] = $this->nextPoint($rowcount, 0) == 10 ? "X" : $this->nextPoint($rowcount, 0);
@@ -234,7 +231,6 @@ class Bowling extends Model
                 throw new \Exception('Not inside allowed range');
                 return;
             }
-            $total = $subscore;
         }
         
         foreach ($framearray as $frame) {
