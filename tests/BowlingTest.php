@@ -31,34 +31,56 @@ class BowlingTest extends TestCase
 		/*
 			Check if isStrike function works
 		*/
-		$frame = array('10','0');
-		$this->assertTrue($bowling->isStrike($frame));
-		$frame = array('5','5');
-		$this->assertFalse($bowling->isStrike($frame));
-		$frame = array('0','10');
-		$this->assertFalse($bowling->isStrike($frame));
+		$frame = array(array('10','0'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->isStrike(0));
+		$frame = array(array('5','5'));
+		$bowling->setFrame($frame);
+		$this->assertFalse($bowling->isStrike(0));
+		$frame = array(array('0','10'));
+		$bowling->setFrame($frame);
+		$this->assertFalse($bowling->isStrike(0));
+		
+		/*
+			Check if isBonusStrike function works
+		*/
+		$frame = array(array('10','10'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->isBonusStrike(0));
+		$frame = array(array('5','5'));
+		$bowling->setFrame($frame);
+		$this->assertFalse($bowling->isBonusStrike(0));
+		$frame = array(array('0','10'));
+		$bowling->setFrame($frame);
+		$this->assertFalse($bowling->isBonusStrike(0));
 
 		/*
 			Check if isSpare function works
 		*/
-		$frame = array('5','5');
-		$this->assertTrue($bowling->isSpare($frame));
-		$frame = array('10','0');
-		$this->assertFalse($bowling->isSpare($frame));
-		$frame = array('0','10');
-		$this->assertTrue($bowling->isSpare($frame));
+		$frame = array(array('5','5'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->isSpare(0));
+		$frame = array(array('10','0'));
+		$bowling->setFrame($frame);
+		$this->assertFalse($bowling->isSpare(0));
+		$frame = array(array('0','10'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->isSpare(0));
 
 		/*
 			Check if nextTwoPoints works
 		*/
-		$frame = array('3','5');
-		$this->assertTrue($bowling->nextTwoPoints($frame) == 8);
+		$frame = array(array('3','5'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->nextTwoPoints(0) == 8);
 
 		/*
 			Check if nextPoint works
 		*/
-		$frame = array('7','2');
-		$this->assertTrue($bowling->nextPoint($frame) == 7);
+		$frame = array(array('7','2'));
+		$bowling->setFrame($frame);
+		$this->assertTrue($bowling->nextPoint(0,0) == 7);
+		$this->assertTrue($bowling->nextPoint(0,1) == 2);
 
 		/*
 			Check if getFromAPI returns value
