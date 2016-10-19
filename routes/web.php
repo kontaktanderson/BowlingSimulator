@@ -12,3 +12,4 @@
 */
 
 Route::resource('/', 'BowlingController');
+Route::resource('/bowling', 'BowlingController');

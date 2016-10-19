@@ -20,6 +20,16 @@ class BowlingTest extends TestCase
 		*/
 		$this->visit('/')->see('Bowling assignment');
 
+    /*
+			Check router and mode select
+		*/
+    $this->visit('bowling/')->see('<h3>Live game mode</h3>');
+
+    /*
+			Check router and mode select
+		*/
+    $this->visit('bowling/timeended')->see('<h3>Time ended mode</h3>');
+
 		/*
 			Check sanitize function
 		*/
@@ -40,7 +50,7 @@ class BowlingTest extends TestCase
 		$frame = array(array('0','10'));
 		$bowling->setFrame($frame);
 		$this->assertFalse($bowling->isStrike(0));
-		
+
 		/*
 			Check if isBonusStrike function works
 		*/

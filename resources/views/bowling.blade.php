@@ -58,7 +58,7 @@
                 font-size: 84px;
             }
 
-            .links > a {
+            .links {
                 color: #636b6f;
                 padding: 0 25px;
                 font-size: 12px;
@@ -138,11 +138,12 @@
   @if ($scores['mode'] == true)
 	<h3>Live game mode</h3>
 	<h4>When in live game mode,  the game calculates like the game is currently in play - meaning it doesn't calculate spares and strikes until their bonus point is available.</h4>
+  <a href="/bowling/timeended" class="links">Click here to change to Time Ended Mode</a><br /><br />
   @else
 	<h3>Time ended mode</h3>
 	<h4>When in time ended mode, the game calculates like the game time has ended - calculating last strikes and spares as 10 without bonus point.</h4>
+  <a href="/bowling/" class="links">Click here to change to Live Play Mode</a><br /><br />
   @endif
-  <h4>This can be changed in the controller.</h4>
   Validated from SKAT Bowling API: {{ $scores['validated'] }} <br />(API validation only trustworthy then using time ended mode - because API is designed for that)
   @if ($scores['validated'] == "test")
 	<script>
