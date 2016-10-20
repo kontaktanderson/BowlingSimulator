@@ -28,12 +28,17 @@ The function routes host port 80 to docker port 80.
 Usage
 -----
 Access homepage and see the program in action.
-To change the calculation from Live play mode to Time ended mode, you can follow the instructions on the page. 
+To change the calculation from Live play mode to Time ended mode, you can follow the instructions on the page.
 
 Testing
 -----
-You can run a sequence test to verify the application by running:
+You can run a sequence test to verify the application, you most access the docker container.
 ```
+docker ps
+```
+Copy the docker id and run following commands
+```
+docker exec -i -t DOCKER_ID_HERE /bin/bash
 cd /var/www
 php vendor/phpunit/phpunit/phpunit tests
 ```
